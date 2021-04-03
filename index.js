@@ -13,9 +13,12 @@ function makeGalleryMarkup(galleryObject) {
       class="gallery__image"
       src="${galleryItem.preview}"
       data-source="${galleryItem.original}"
+      data-index="${galleryItem.index}"
+      
       alt="${galleryItem.description}"
     />
   </a>
+  
 </li>
     `,
     )
@@ -39,10 +42,32 @@ galleryContainerRef.addEventListener('click', event => {
   if (event.target.nodeName !== 'IMG') {
     return;
   }
+
   lightBoxRef.classList.add('is-open');
   lightBoxImageRef.src = event.target.dataset.source;
+
+  lightBoxImageRef.index = event.target.dataset.index;
   lightBoxImageRef.alt = event.target.alt;
+
+  window.addEventListener('keydown', closeLightboxOnEsc);
+  lightBoxRef.addEventListener('click', closeLightbox);
+  window.addEventListener('keydown', event => {
+    if (event.code === 'ArrowRight') {
+      console.log('Pressed Right arrow!');
+    }
+
+    if (event.code === 'ArrowLeft') {
+      console.log('Pressed left arrow!');
+    }
+  });
 });
+function closeLightboxOnEsc(event) {
+  if (event.code === 'Escape') {
+    removeClassIsOpen(lightBoxRef);
+    clearSrcOfImage(lightBoxImageRef);
+    window.removeEventListener('keydown', closeLightboxOnEsc);
+  }
+}
 // lightBoxClosebtn.addEventListener('click', () => {
 //   removeClassIsOpen(lightBoxRef);
 //   clearSrcOfImage(lightBoxImageRef);
@@ -53,19 +78,12 @@ galleryContainerRef.addEventListener('click', event => {
 //     clearSrcOfImage(lightBoxImageRef);
 //   }
 // });
-window.addEventListener('keydown', event => {
-  if (event.code === 'Escape') {
-    removeClassIsOpen(lightBoxRef);
-    clearSrcOfImage(lightBoxImageRef);
-  }
-});
-
-lightBoxRef.addEventListener('click', closeLightbox, lightBoxRef);
 
 function closeLightbox(event) {
   if (event.target.nodeName !== 'IMG') {
     removeClassIsOpen(lightBoxRef);
     clearSrcOfImage(lightBoxImageRef);
+    lightBoxRef.removeEventListener('click', closeLightbox);
   }
 }
 
@@ -74,6 +92,5 @@ function removeClassIsOpen(lightBox) {
 }
 function clearSrcOfImage(image) {
   image.src = '';
+  image.alt = '';
 }
-
-console.log(galleryContainerRef.children);
