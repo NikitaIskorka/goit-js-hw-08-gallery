@@ -52,19 +52,7 @@ galleryContainerRef.addEventListener('click', event => {
 
   window.addEventListener('keydown', closeLightboxOnEsc);
   lightBoxRef.addEventListener('click', closeLightbox);
-  window.addEventListener('keydown', event => {
-    const reversedGallery = [...galleryItems].reverse();
-    const galleryArray =
-      event.code === 'ArrowLeft' ? [...galleryItems] : reversedGallery;
-
-    for (let i = 0; i < galleryArray.length; i += 1) {
-      if (galleryArray[i].original === lightBoxImageRef.src && i > 0) {
-        const lightBoxImageSrc = galleryArray[i - 1].original;
-        const ligthboxImageAlt = galleryArray[i - 1].description;
-        addImageLightBox(lightBoxImageSrc, ligthboxImageAlt);
-      }
-    }
-  });
+  window.addEventListener('keydown', changeImgOnArrowKeypres);
 });
 function closeLightboxOnEsc(event) {
   if (event.code === 'Escape') {
@@ -73,16 +61,6 @@ function closeLightboxOnEsc(event) {
     window.removeEventListener('keydown', closeLightboxOnEsc);
   }
 }
-// lightBoxClosebtn.addEventListener('click', () => {
-//   removeClassIsOpen(lightBoxRef);
-//   clearSrcOfImage(lightBoxImageRef);
-// });
-// lightBoxOverlay.addEventListener('click', event => {
-//   if (event.target === lightBoxOverlay) {
-//     removeClassIsOpen(lightBoxRef);
-//     clearSrcOfImage(lightBoxImageRef);
-//   }
-// });
 
 function closeLightbox(event) {
   if (event.target.nodeName !== 'IMG') {
@@ -103,3 +81,16 @@ const addImageLightBox = (src, alt) => {
   lightBoxImageRef.src = src;
   lightBoxImageRef.alt = alt;
 };
+function changeImgOnArrowKeypres(event) {
+  const reversedGallery = [...galleryItems].reverse();
+  const galleryArray =
+    event.code === 'ArrowLeft' ? [...galleryItems] : reversedGallery;
+
+  for (let i = 0; i < galleryArray.length; i += 1) {
+    if (galleryArray[i].original === lightBoxImageRef.src && i > 0) {
+      const lightBoxImageSrc = galleryArray[i - 1].original;
+      const ligthboxImageAlt = galleryArray[i - 1].description;
+      addImageLightBox(lightBoxImageSrc, ligthboxImageAlt);
+    }
+  }
+}
