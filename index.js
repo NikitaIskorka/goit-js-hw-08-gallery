@@ -24,6 +24,7 @@ function makeGalleryMarkup(galleryObject) {
     )
     .join('');
 }
+
 const galleryContainerRef = document.querySelector('.js-gallery');
 const lightBoxRef = document.querySelector('.js-lightbox');
 const lightBoxImageRef = document.querySelector('.lightbox__image');
@@ -52,12 +53,16 @@ galleryContainerRef.addEventListener('click', event => {
   window.addEventListener('keydown', closeLightboxOnEsc);
   lightBoxRef.addEventListener('click', closeLightbox);
   window.addEventListener('keydown', event => {
-    if (event.code === 'ArrowRight') {
-      console.log('Pressed Right arrow!');
-    }
+    const reversedGallery = [...galleryItems].reverse();
+    const galleryArray =
+      event.code === 'ArrowLeft' ? [...galleryItems] : reversedGallery;
 
-    if (event.code === 'ArrowLeft') {
-      console.log('Pressed left arrow!');
+    for (let i = 0; i < galleryArray.length; i += 1) {
+      if (galleryArray[i].original === lightBoxImageRef.src && i > 0) {
+        const lightBoxImageSrc = galleryArray[i - 1].original;
+        const ligthboxImageAlt = galleryArray[i - 1].description;
+        addImageLightBox(lightBoxImageSrc, ligthboxImageAlt);
+      }
     }
   });
 });
@@ -94,3 +99,7 @@ function clearSrcOfImage(image) {
   image.src = '';
   image.alt = '';
 }
+const addImageLightBox = (src, alt) => {
+  lightBoxImageRef.src = src;
+  lightBoxImageRef.alt = alt;
+};
