@@ -43,6 +43,7 @@ galleryContainerRef.addEventListener('click', event => {
   if (event.target.nodeName !== 'IMG') {
     return;
   }
+  document.body.style.overflow = 'hidden';
 
   lightBoxRef.classList.add('is-open');
   lightBoxImageRef.src = event.target.dataset.source;
@@ -52,13 +53,28 @@ galleryContainerRef.addEventListener('click', event => {
 
   window.addEventListener('keydown', closeLightboxOnEsc);
   lightBoxRef.addEventListener('click', closeLightbox);
-  window.addEventListener('keydown', changeImgOnArrowKeypres);
+  window.addEventListener('keydown', event => {
+    const galleriItemsUrl = galleryItems.map(item => item.original);
+    let currentIndex = galleriItemsUrl.indexOf(lightBoxImageRef.src);
+    function setModalImg(index) {
+      lightBoxImageRef.src = galleriItemsUrl[index];
+    }
+    if (event.code === 'ArrowRight' && currentIndex < 8) {
+      currentIndex += 1;
+      console.log(currentIndex);
+    } else if (event.code === 'ArrowLeft' && currentIndex > 0) {
+      currentIndex -= 1;
+      console.log(currentIndex);
+    }
+    setModalImg(currentIndex);
+  });
 });
 function closeLightboxOnEsc(event) {
   if (event.code === 'Escape') {
     removeClassIsOpen(lightBoxRef);
     clearSrcOfImage(lightBoxImageRef);
     window.removeEventListener('keydown', closeLightboxOnEsc);
+    document.body.style.overflow = 'auto';
   }
 }
 
@@ -67,6 +83,7 @@ function closeLightbox(event) {
     removeClassIsOpen(lightBoxRef);
     clearSrcOfImage(lightBoxImageRef);
     lightBoxRef.removeEventListener('click', closeLightbox);
+    document.body.style.overflow = 'auto';
   }
 }
 
@@ -77,20 +94,20 @@ function clearSrcOfImage(image) {
   image.src = '';
   image.alt = '';
 }
-const addImageLightBox = (src, alt) => {
-  lightBoxImageRef.src = src;
-  lightBoxImageRef.alt = alt;
-};
-function changeImgOnArrowKeypres(event) {
-  const reversedGallery = [...galleryItems].reverse();
-  const galleryArray =
-    event.code === 'ArrowLeft' ? [...galleryItems] : reversedGallery;
+// const addImageLightBox = (src, alt) => {
+//   lightBoxImageRef.src = src;
+//   lightBoxImageRef.alt = alt;
+// };
+// function changeImgOnArrowKeypres(event) {
+//   const reversedGallery = [...galleryItems].reverse();
+//   const galleryArray =
+//     event.code === 'ArrowLeft' ? [...galleryItems] : reversedGallery;
 
-  for (let i = 0; i < galleryArray.length; i += 1) {
-    if (galleryArray[i].original === lightBoxImageRef.src && i > 0) {
-      const lightBoxImageSrc = galleryArray[i - 1].original;
-      const ligthboxImageAlt = galleryArray[i - 1].description;
-      addImageLightBox(lightBoxImageSrc, ligthboxImageAlt);
-    }
-  }
-}
+//   for (let i = 0; i < galleryArray.length; i += 1) {
+//     if (galleryArray[i].original === lightBoxImageRef.src && i > 0) {
+//       const lightBoxImageSrc = galleryArray[i - 1].original;
+//       const ligthboxImageAlt = galleryArray[i - 1].description;
+//       addImageLightBox(lightBoxImageSrc, ligthboxImageAlt);
+//     }
+//   }
+// }
