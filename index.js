@@ -53,7 +53,7 @@ galleryContainerRef.addEventListener('click', event => {
 
   window.addEventListener('keydown', closeLightboxOnEsc);
   lightBoxRef.addEventListener('click', closeLightbox);
-  window.addEventListener('keydown', event => {
+  /*  window.addEventListener('keydown', event => {
     const galleriItemsUrl = galleryItems.map(item => item.original);
     let currentIndex = galleriItemsUrl.indexOf(lightBoxImageRef.src);
     function setModalImg(index) {
@@ -67,7 +67,9 @@ galleryContainerRef.addEventListener('click', event => {
       console.log(currentIndex);
     }
     setModalImg(currentIndex);
-  });
+  }); */
+
+  window.addEventListener('keydown', changeImgOnArrowKeypres);
 });
 function closeLightboxOnEsc(event) {
   if (event.code === 'Escape') {
@@ -77,7 +79,24 @@ function closeLightboxOnEsc(event) {
     document.body.style.overflow = 'auto';
   }
 }
-
+function changeImgOnArrowKeypres() {
+  const galleriItemsUrl = galleryItems.map(item => item.original);
+  let currentIndex = galleriItemsUrl.indexOf(lightBoxImageRef.src);
+  function setModalImg(index) {
+    lightBoxImageRef.src = galleriItemsUrl[index];
+  }
+  if (
+    event.code === 'ArrowRight' &&
+    currentIndex < galleriItemsUrl.length - 1
+  ) {
+    currentIndex += 1;
+    console.log(currentIndex);
+  } else if (event.code === 'ArrowLeft' && currentIndex > 0) {
+    currentIndex -= 1;
+    console.log(currentIndex);
+  }
+  setModalImg(currentIndex);
+}
 function closeLightbox(event) {
   if (event.target.nodeName !== 'IMG') {
     removeClassIsOpen(lightBoxRef);
@@ -94,20 +113,3 @@ function clearSrcOfImage(image) {
   image.src = '';
   image.alt = '';
 }
-// const addImageLightBox = (src, alt) => {
-//   lightBoxImageRef.src = src;
-//   lightBoxImageRef.alt = alt;
-// };
-// function changeImgOnArrowKeypres(event) {
-//   const reversedGallery = [...galleryItems].reverse();
-//   const galleryArray =
-//     event.code === 'ArrowLeft' ? [...galleryItems] : reversedGallery;
-
-//   for (let i = 0; i < galleryArray.length; i += 1) {
-//     if (galleryArray[i].original === lightBoxImageRef.src && i > 0) {
-//       const lightBoxImageSrc = galleryArray[i - 1].original;
-//       const ligthboxImageAlt = galleryArray[i - 1].description;
-//       addImageLightBox(lightBoxImageSrc, ligthboxImageAlt);
-//     }
-//   }
-// }
