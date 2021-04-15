@@ -53,6 +53,8 @@ galleryContainerRef.addEventListener('click', event => {
 
   window.addEventListener('keydown', closeLightboxOnEsc);
   lightBoxRef.addEventListener('click', closeLightbox);
+
+  // =============================ПОЧЕМУ КОД НИЖЕ РАБОТАЕТ НЕ ПРАВИЛЬНО===========================
   /*  window.addEventListener('keydown', event => {
     const galleriItemsUrl = galleryItems.map(item => item.original);
     let currentIndex = galleriItemsUrl.indexOf(lightBoxImageRef.src);
@@ -68,17 +70,9 @@ galleryContainerRef.addEventListener('click', event => {
     }
     setModalImg(currentIndex);
   }); */
-
+  // ==================А ЕСЛИ ВЫНЕСТИ В ОТДЕЛЬНУЮ ФУНЦИЮ ВСЕ РАОТАЕТ ВЕРНО=================================
   window.addEventListener('keydown', changeImgOnArrowKeypres);
 });
-function closeLightboxOnEsc(event) {
-  if (event.code === 'Escape') {
-    removeClassIsOpen(lightBoxRef);
-    clearSrcOfImage(lightBoxImageRef);
-    window.removeEventListener('keydown', closeLightboxOnEsc);
-    document.body.style.overflow = 'auto';
-  }
-}
 function changeImgOnArrowKeypres() {
   const galleriItemsUrl = galleryItems.map(item => item.original);
   let currentIndex = galleriItemsUrl.indexOf(lightBoxImageRef.src);
@@ -96,6 +90,14 @@ function changeImgOnArrowKeypres() {
     console.log(currentIndex);
   }
   setModalImg(currentIndex);
+}
+function closeLightboxOnEsc(event) {
+  if (event.code === 'Escape') {
+    removeClassIsOpen(lightBoxRef);
+    clearSrcOfImage(lightBoxImageRef);
+    window.removeEventListener('keydown', closeLightboxOnEsc);
+    document.body.style.overflow = 'auto';
+  }
 }
 function closeLightbox(event) {
   if (event.target.nodeName !== 'IMG') {
